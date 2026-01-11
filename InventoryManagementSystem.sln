@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InventoryManagementSystem", "InventoryManagementSystem.csproj", "{16222733-01B8-4046-8701-F109D91F138A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{16222733-01B8-4046-8701-F109D91F138A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16222733-01B8-4046-8701-F109D91F138A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16222733-01B8-4046-8701-F109D91F138A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16222733-01B8-4046-8701-F109D91F138A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

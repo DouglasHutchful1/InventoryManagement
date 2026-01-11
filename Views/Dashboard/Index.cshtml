@@ -1,0 +1,102 @@
+@{
+    Layout = "_Layout.cshtml";
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container-fluid">
+    <div class="row g-4">
+
+        <!-- Card: Total Inventory -->
+        <div class="col-md-3">
+            <div class="card-dashboard text-center">
+                <h6 class="text-muted">Total Inventory</h6>
+                <h2 class="fw-bold">1,245</h2>
+                <i class="bi bi-box-seam fs-1 text-primary mt-2"></i>
+            </div>
+        </div>
+
+        <!-- Card: Pending Orders -->
+        <div class="col-md-3">
+            <div class="card-dashboard text-center">
+                <h6 class="text-muted">Pending Orders</h6>
+                <h2 class="fw-bold">87</h2>
+                <i class="bi bi-cart fs-1 text-warning mt-2"></i>
+            </div>
+        </div>
+
+        <!-- Card: Sales Today -->
+        <div class="col-md-3">
+            <div class="card-dashboard text-center">
+                <h6 class="text-muted">Sales Today</h6>
+                <h2 class="fw-bold">$3,245</h2>
+                <i class="bi bi-currency-dollar fs-1 text-success mt-2"></i>
+            </div>
+        </div>
+
+        <!-- Card: Users -->
+        <div class="col-md-3">
+            <div class="card-dashboard text-center">
+                <h6 class="text-muted">Users</h6>
+                <h2 class="fw-bold">34</h2>
+                <i class="bi bi-people-fill fs-1 text-danger mt-2"></i>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row mt-5 g-4">
+        <div class="col-lg-6">
+            <div class="card-dashboard">
+                <h6 class="text-muted">Inventory Trends</h6>
+                <canvas id="inventoryChart" height="200"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card-dashboard">
+                <h6 class="text-muted">Sales Overview</h6>
+                <canvas id="salesChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const inventoryCtx = document.getElementById('inventoryChart').getContext('2d');
+        new Chart(inventoryCtx, {
+            type: 'line',
+            data: {
+                labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+                datasets: [{
+                    label: 'Inventory',
+                    data: [120, 135, 150, 145, 160, 170, 180],
+                    borderColor: '#2563eb',
+                    backgroundColor: 'rgba(37,99,235,0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        const salesCtx = document.getElementById('salesChart').getContext('2d');
+        new Chart(salesCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+                datasets: [{
+                    label: 'Sales ($)',
+                    data: [300, 450, 400, 500, 700, 650, 600],
+                    backgroundColor: '#16a34a',
+                    borderRadius: 6
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+        });
+    </script>
+}

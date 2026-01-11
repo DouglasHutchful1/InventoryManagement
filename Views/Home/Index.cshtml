@@ -1,0 +1,229 @@
+﻿@{
+    Layout = null;
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+body {
+    height: 100vh;
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 50px 35px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.login-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+}
+
+.login-card h4 {
+    font-weight: 600;
+    color: #ffffffaa;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+}
+
+.login-card h1 {
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 30px;
+    font-size: 2.2rem;
+}
+
+.login-card .form-control {
+    border-radius: 12px;
+    border: none;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    background: rgba(255,255,255,0.25);
+    color: #fff;
+    transition: all 0.25s;
+}
+
+.login-card .form-control::placeholder {
+    color: rgba(255,255,255,0.7);
+}
+
+.login-card .form-control:focus {
+    outline: none;
+    background: rgba(255,255,255,0.45);
+    box-shadow: 0 0 15px rgba(255,255,255,0.4);
+    color: #fff;
+}
+
+.input-group-text {
+    background: rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.5);
+    border-right: 0;
+    color: #ffffff;
+    border-radius: 12px 0 0 12px; /* left rounded */
+}
+
+.form-control {
+    border: 1px solid rgba(255,255,255,0.5);
+    border-left: 0;
+    border-radius: 0 12px 12px 0; /* right rounded */
+}
+
+/* Modern button */
+.btn-modern {
+    border-radius: 12px;
+    padding: 14px 0;
+    font-weight: 600;
+    background: linear-gradient(135deg, #1e40af, #2563eb);
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    width: 100%;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    transition: all 0.25s;
+}
+
+.btn-modern:hover {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+}
+
+#Label_Message {
+    margin-bottom: 15px;
+    font-weight: 500;
+    color: #ff6b6b;
+    font-size: 0.95rem;
+}
+
+.login-footer a {
+    color: #ffffffaa;
+    text-decoration: none;
+}
+
+.login-footer a:hover {
+    text-decoration: underline;
+}
+
+#toastContainer .toast {
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    font-weight: 500;
+}
+
+#toastContainer .toast.bg-success { background: #28a745; color: #fff; }
+#toastContainer .toast.bg-danger { background: #dc3545; color: #fff; }
+#toastContainer .toast.bg-info { background: #17a2b8; color: #fff; }
+#toastContainer .toast.bg-warning { background: #ffc107; color: #212529; }
+</style>
+
+<section>
+    <div class="container h-100">
+        <div class="row h-100 justify-content-center align-items-center">
+            <div class="col-12 col-md-6 d-flex justify-content-center">
+                <div class="login-card">
+                    <h4>DAIM System</h4>
+                    <h1>Log In</h1>
+                    <div id="Label_Message"></div>
+                    <form id="loginForm" autocomplete="off">
+                      <div class="input-group mb-3">
+                          <span class="input-group-text bg-white border-end-0">
+                              <i class="bi bi-person-fill" style="color:#2563eb;"></i>
+                          </span>
+                          <input type="text" id="Input_Username" class="form-control border-start-0" placeholder="Username" required>
+                      </div>
+                      <div class="input-group mb-3">
+                          <span class="input-group-text bg-white border-end-0">
+                              <i class="bi bi-lock-fill" style="color:#2563eb;"></i>
+                          </span>
+                          <input type="password" id="Input_Password" class="form-control border-start-0" placeholder="Password" required>
+                      </div>
+
+                        <button type="button" id="Button_Login" class="btn btn-modern">
+                            <span class="spinner-border spinner-border-sm d-none" id="loginSpinner" role="status" aria-hidden="true"></span>
+                            Login
+                        </button>
+                    </form>
+                    <div class="login-footer mt-3">
+                        <a href="#">Forgot Password?</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="toastContainer" style="position: fixed; top: 20px; right: 20px; z-index:1055;"></div>
+
+<script>
+$(function () {
+    function showToast(message, type='info', delay=4000) {
+        const bgClass = { success:'bg-success', danger:'bg-danger', info:'bg-info', warning:'bg-warning'}[type] || 'bg-info';
+        const toastId = 'toast_' + Date.now();
+        const toastHTML = `
+            <div id="${toastId}" class="toast ${bgClass} border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">${message}</div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        `;
+        $("#toastContainer").append(toastHTML);
+        const toastEl = document.getElementById(toastId);
+        const bsToast = new bootstrap.Toast(toastEl, { delay: delay });
+        bsToast.show();
+        toastEl.addEventListener('hidden.bs.toast', function() { toastEl.remove(); });
+    }
+
+    function performLogin() {
+        var username = $("#Input_Username").val().trim();
+        var password = $("#Input_Password").val().trim();
+
+        if (!username || !password) {
+            $("#Label_Message").html('<strong>Please enter both username and password.</strong>');
+            return;
+        }
+
+        $("#Button_Login").prop("disabled", true);
+        $("#loginSpinner").removeClass("d-none");
+
+        $.ajax({
+            type: "GET",
+            url: '/Home/Login',
+            dataType: "json",
+            data: { Username: username, Password: password }
+        }).done(function (response) {
+            $("#Button_Login").prop("disabled", false);
+            $("#loginSpinner").addClass("d-none");
+
+            if (response.success === 'true') {
+                showToast(response.status_Message, 'success');
+                setTimeout(() => { window.location.href = '/Dashboard/'; }, 1000);
+            } else {
+                $("#Label_Message").html('<strong>' + response.status_Message + '</strong>');
+            }
+        }).fail(function () {
+            $("#Button_Login").prop("disabled", false);
+            $("#loginSpinner").addClass("d-none");
+            $("#Label_Message").html('<strong>Login failed. Please try again.</strong>');
+        });
+    }
+
+    $("#Button_Login").click(performLogin);
+    $(document).keypress(function (e) { if (e.which === 13) performLogin(); });
+});
+</script>
