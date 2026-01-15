@@ -5,6 +5,7 @@ namespace InventoryManagementSystem.Models
 {
     public class User
     {
+        [Key]
         public int Id { get; set; }
 
         [Required, MaxLength(100)]

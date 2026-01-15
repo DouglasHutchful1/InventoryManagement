@@ -1,0 +1,184 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = Model?.Id == 0 ? "New Order" : "Edit Order";
+}
+@model InventoryManagementSystem.Models.Order
+
+<div class="card shadow-sm mx-auto my-4" style="max-width:950px;">
+    <div class="card-header bg-primary text-white fw-bold fs-5 d-flex align-items-center">
+        <i class="bi bi-receipt me-2"></i>
+        @(Model?.Id == 0 ? "New Order" : "Edit Order")
+    </div>
+    <div class="card-body">
+        <form asp-action="@(Model?.Id == 0 ? "Create" : "Edit")" method="post" class="needs-validation" novalidate>
+            
+            <!-- Customer & Status Row -->
+            <div class="row g-3 mb-3">
+                <div class="col-md-6 position-relative">
+                    <label asp-for="CustomerId" class="form-label">Customer</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                        <select name="CustomerId" class="form-select">
+                            @{
+                                <option value="">-- Select Customer --</option>
+                                foreach (var cust in ViewBag.Customers)
+                                {
+                                    if (Model.CustomerId == cust.Id)
+                                    {
+                                        <option value="@cust.Id" selected>@cust.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@cust.Id">@cust.Name</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <span asp-validation-for="CustomerId" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3 position-relative">
+                    <label asp-for="OrderDate" class="form-label">Order Date</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+                        <input asp-for="OrderDate" class="form-control" type="date" />
+                    </div>
+                    <span asp-validation-for="OrderDate" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3 position-relative">
+                    <label asp-for="Status" class="form-label">Status</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-flag"></i></span>
+                        <select name="Status" class="form-select">
+                            @{
+                                <option value="Pending" selected="@(Model.Status == "Pending")">Pending</option>
+                                <option value="Completed" selected="@(Model.Status == "Completed")">Completed</option>
+                                <option value="Cancelled" selected="@(Model.Status == "Cancelled")">Cancelled</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Items -->
+            <h5 class="mt-4 mb-3">Order Items</h5>
+            <table class="table table-bordered align-middle" id="orderItemsTable">
+                <thead class="table-light">
+                    <tr>
+                        <th>Inventory</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
+                        <th style="width:50px;">Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.OrderItems != null && Model.OrderItems.Any())
+                    {
+                        for (int i = 0; i < Model.OrderItems.Count; i++)
+                        {
+                            <tr>
+                                <td>
+                                    <select name="OrderItems[@i].InventoryId" class="form-select inventory-select">
+                                        @{
+                                            <option value="">-- Select Inventory --</option>
+                                            foreach (var inv in ViewBag.Inventories)
+                                            {
+                                                if (Model.OrderItems[i].InventoryId == inv.Id)
+                                                {
+                                                    <option value="@inv.Id" selected>@inv.Name</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@inv.Id">@inv.Name</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" name="OrderItems[@i].Quantity" value="@Model.OrderItems[i].Quantity" class="form-control quantity-input" min="1" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control unit-price" value="@Model.OrderItems[i].UnitPrice.ToString("F2")" readonly />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control total-price" value="@Model.OrderItems[i].TotalPrice.ToString("F2")" readonly />
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-danger rounded-circle remove-item"><i class="bi bi-trash"></i></button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+
+            <button type="button" class="btn btn-secondary rounded-pill mb-3" id="addItemBtn">
+                <i class="bi bi-plus-circle me-1"></i> Add Item
+            </button>
+
+            <!-- Form actions -->
+            <div class="d-flex justify-content-end mt-3">
+                <a asp-action="Index" class="btn btn-outline-secondary rounded-pill me-2">
+                    <i class="bi bi-x-circle me-1"></i> Cancel
+                </a>
+                <button type="submit" class="btn btn-success rounded-pill">
+                    <i class="bi bi-check-circle me-1"></i> Save Order
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const inventories = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.Inventories));
+
+        function calculateTotal(row) {
+            const qty = parseFloat($(row).find('.quantity-input').val()) || 0;
+            const unit = parseFloat($(row).find('.unit-price').val()) || 0;
+            $(row).find('.total-price').val((qty * unit).toFixed(2));
+        }
+
+        $(document).ready(function () {
+
+            $('#addItemBtn').click(function () {
+                const index = $('#orderItemsTable tbody tr').length;
+                let options = `<option value="">-- Select Inventory --</option>`;
+                inventories.forEach(inv => {
+                    options += `<option value="${inv.Id}">${inv.Name}</option>`;
+                });
+
+                const newRow = `<tr>
+                    <td><select name="OrderItems[${index}].InventoryId" class="form-select inventory-select">${options}</select></td>
+                    <td><input type="number" name="OrderItems[${index}].Quantity" class="form-control quantity-input" min="1" value="1" /></td>
+                    <td><input type="text" class="form-control unit-price" readonly /></td>
+                    <td><input type="text" class="form-control total-price" readonly /></td>
+                    <td><button type="button" class="btn btn-sm btn-danger rounded-circle remove-item"><i class="bi bi-trash"></i></button></td>
+                </tr>`;
+                $('#orderItemsTable tbody').append(newRow);
+            });
+
+            $('#orderItemsTable').on('change', '.inventory-select', function () {
+                const row = $(this).closest('tr');
+                const invId = $(this).val();
+                const inv = inventories.find(i => i.Id == invId);
+                $(row).find('.unit-price').val(inv ? inv.Price.toFixed(2) : '0.00');
+                calculateTotal(row);
+            });
+
+            $('#orderItemsTable').on('input', '.quantity-input', function () {
+                const row = $(this).closest('tr');
+                calculateTotal(row);
+            });
+
+            $('#orderItemsTable').on('click', '.remove-item', function () {
+                $(this).closest('tr').remove();
+            });
+        });
+    </script>
+}
