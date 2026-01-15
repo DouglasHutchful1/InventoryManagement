@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace InventoryManagementSystem.Models
 {
@@ -29,9 +30,14 @@ namespace InventoryManagementSystem.Models
 
         // Foreign key
         public int CreatedBy { get; set; }
-        public User User { get; set; }
+       
+        [ForeignKey("CreatedBy")]  
+        [BindNever]
+        public User Creator { get; set; }  
 
         // Navigation
+        [NotMapped]
+        [BindNever]
         public ICollection<OrderItem> OrderItems { get; set; }
     }
 }

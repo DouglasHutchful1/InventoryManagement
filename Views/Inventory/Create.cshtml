@@ -1,0 +1,61 @@
+@model InventoryManagementSystem.Models.InventoryCreateViewModel
+@{
+    ViewData["Title"] = "Create Inventory Item";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white fw-bold">
+            <i class="bi bi-plus-lg me-2"></i>Create Inventory Item
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post" class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="Name" class="form-label fw-semibold"></label>
+                    <input asp-for="Name" class="form-control shadow-sm" placeholder="Enter item name"/>
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="SKU" class="form-label fw-semibold"></label>
+                    <input asp-for="SKU" class="form-control shadow-sm" placeholder="Enter SKU"/>
+                    <span asp-validation-for="SKU" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Category" class="form-label fw-semibold"></label>
+                    <input asp-for="Category" class="form-control shadow-sm" placeholder="Enter category"/>
+                </div>
+
+                <div class="col-md-3">
+                    <label asp-for="Quantity" class="form-label fw-semibold"></label>
+                    <input asp-for="Quantity" class="form-control shadow-sm" type="number" min="0"/>
+                </div>
+
+                <div class="col-md-3">
+                    <label asp-for="ReorderLevel" class="form-label fw-semibold"></label>
+                    <input asp-for="ReorderLevel" class="form-control shadow-sm" type="number" min="0"/>
+                </div>
+
+                <div class="col-md-3">
+                    <label asp-for="Price" class="form-label fw-semibold"></label>
+                    <input asp-for="Price" class="form-control shadow-sm" type="number" step="0.01" min="0"/>
+                </div>
+
+                <div class="col-12 mt-3">
+                    <button type="submit" class="btn btn-primary shadow-sm me-2 rounded-pill">
+                        <i class="bi bi-check-lg me-1"></i> Create
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary shadow-sm rounded-pill">
+                        <i class="bi bi-x-lg me-1"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
