@@ -1,0 +1,68 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = Model?.Id == 0 ? "New Customer" : "Edit Customer";
+}
+@model InventoryManagementSystem.Models.Customer
+
+<div class="container my-5">
+    <div class="card shadow-lg mx-auto" style="max-width:700px; border-radius:15px;">
+        <!-- Card Header -->
+        <div class="card-header d-flex align-items-center justify-content-between" 
+             style="border-top-left-radius:15px; border-top-right-radius:15px; background: linear-gradient(90deg,#4e73df,#224abe); color:white; font-weight:600; font-size:1.25rem;">
+            @(Model?.Id == 0 ? "New Customer" : "Edit Customer")
+            <i class="bi bi-person-fill-add fs-4"></i>
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body p-4">
+            <form asp-action="@(Model?.Id == 0 ? "Create" : "Edit")" method="post" class="needs-validation" novalidate>
+
+                <!-- Name with icon -->
+                <div class="input-group mb-3">
+                    <span class="input-group-text bg-white border-0"><i class="bi bi-person-fill text-muted"></i></span>
+                    <input asp-for="Name" class="form-control rounded-pill shadow-sm" placeholder="Full Name" />
+                </div>
+                <span asp-validation-for="Name" class="text-danger small mb-2 d-block"></span>
+
+                <!-- Phone & Email with icons -->
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-0"><i class="bi bi-telephone-fill text-muted"></i></span>
+                            <input asp-for="Phone" class="form-control rounded-pill shadow-sm" placeholder="Phone Number" />
+                        </div>
+                        <span asp-validation-for="Phone" class="text-danger small d-block mt-1"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-0"><i class="bi bi-envelope-fill text-muted"></i></span>
+                            <input asp-for="Email" class="form-control rounded-pill shadow-sm" placeholder="Email Address" />
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger small d-block mt-1"></span>
+                    </div>
+                </div>
+
+                <!-- Address -->
+                <div class="input-group mb-4">
+                    <span class="input-group-text bg-white border-0"><i class="bi bi-geo-alt-fill text-muted"></i></span>
+                    <textarea asp-for="Address" class="form-control rounded-3 shadow-sm" placeholder="Customer Address" style="height:90px;"></textarea>
+                </div>
+                <span asp-validation-for="Address" class="text-danger small mb-2 d-block"></span>
+
+                <!-- Buttons -->
+                <div class="d-flex justify-content-end gap-3">
+                    <a asp-action="Index" class="btn btn-outline-secondary btn-lg rounded-pill shadow-sm">
+                        <i class="bi bi-x-circle me-1"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn btn-success btn-lg rounded-pill shadow-sm">
+                        <i class="bi bi-check-circle me-1"></i> Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
