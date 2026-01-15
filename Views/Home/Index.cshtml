@@ -116,7 +116,7 @@ body {
 }
 
 .login-footer a:hover {
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 #toastContainer .toast {
@@ -189,39 +189,40 @@ $(function () {
         toastEl.addEventListener('hidden.bs.toast', function() { toastEl.remove(); });
     }
 
-    function performLogin() {
-        var username = $("#Input_Username").val().trim();
-        var password = $("#Input_Password").val().trim();
+   function performLogin() {
+       var username = $("#Input_Username").val().trim();
+       var password = $("#Input_Password").val().trim();
+   
+       if (!username || !password) {
+           $("#Label_Message").html('<strong>Please enter both username and password.</strong>');
+           return;
+       }
+   
+       $("#Button_Login").prop("disabled", true);
+       $("#loginSpinner").removeClass("d-none");
+   
+       $.ajax({
+           type: "POST", 
+           url: '/Home/Login',
+           dataType: "json",
+           data: { username: username, password: password } 
+       }).done(function (response) {
+           $("#Button_Login").prop("disabled", false);
+           $("#loginSpinner").addClass("d-none");
+   
+           if (response.success) { 
+               showToast(response.message, 'success');
+               setTimeout(() => { window.location.href = response.redirect; }, 1000);
+           } else {
+               $("#Label_Message").html('<strong>' + response.message + '</strong>');
+           }
+       }).fail(function () {
+           $("#Button_Login").prop("disabled", false);
+           $("#loginSpinner").addClass("d-none");
+           $("#Label_Message").html('<strong>Login failed. Please try again.</strong>');
+       });
+   }
 
-        if (!username || !password) {
-            $("#Label_Message").html('<strong>Please enter both username and password.</strong>');
-            return;
-        }
-
-        $("#Button_Login").prop("disabled", true);
-        $("#loginSpinner").removeClass("d-none");
-
-        $.ajax({
-            type: "GET",
-            url: '/Home/Login',
-            dataType: "json",
-            data: { Username: username, Password: password }
-        }).done(function (response) {
-            $("#Button_Login").prop("disabled", false);
-            $("#loginSpinner").addClass("d-none");
-
-            if (response.success === 'true') {
-                showToast(response.status_Message, 'success');
-                setTimeout(() => { window.location.href = '/Dashboard/'; }, 1000);
-            } else {
-                $("#Label_Message").html('<strong>' + response.status_Message + '</strong>');
-            }
-        }).fail(function () {
-            $("#Button_Login").prop("disabled", false);
-            $("#loginSpinner").addClass("d-none");
-            $("#Label_Message").html('<strong>Login failed. Please try again.</strong>');
-        });
-    }
 
     $("#Button_Login").click(performLogin);
     $(document).keypress(function (e) { if (e.which === 13) performLogin(); });

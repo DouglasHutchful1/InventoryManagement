@@ -23,7 +23,7 @@ public class HomeController(ILogger<HomeController> logger,InventoryDbContext db
     {
         try
         {
-            var user = await dbcon.User.FirstOrDefaultAsync(u =>
+            var user = await dbcon.Users.FirstOrDefaultAsync(u =>
                 u.Username == username || u.Email == username);
 
             if (user == null)
@@ -71,10 +71,10 @@ public class HomeController(ILogger<HomeController> logger,InventoryDbContext db
         try
         {
 
-            if (await dbcon.User.AnyAsync(u => u.Username == requestDto.Username))
+            if (await dbcon.Users.AnyAsync(u => u.Username == requestDto.Username))
                 return BadRequest(new { message = "Username already exists" });
 
-            if (await dbcon.User.AnyAsync(u => u.Email == requestDto.Email))
+            if (await dbcon.Users.AnyAsync(u => u.Email == requestDto.Email))
                 return BadRequest(new { message = "Email already exists" });
             if (requestDto.Password != requestDto.ConfirmPassword)
                 return BadRequest(new { success = false, message = "Passwords do not match" });
@@ -91,7 +91,7 @@ public class HomeController(ILogger<HomeController> logger,InventoryDbContext db
                 UserType = 0, //default 0 as user
                 CreationDate = DateTime.UtcNow
             };
-            dbcon.User.Add(user);
+            dbcon.Users.Add(user);
             await dbcon.SaveChangesAsync();
 
             return Ok(new { success = true, message = "Registration was successful", user.Id });
@@ -133,12 +133,13 @@ public class HomeController(ILogger<HomeController> logger,InventoryDbContext db
     }
     
     // logout 
-    [HttpPost]
-    public async Task<IActionResult> Logout()
+    [HttpGet]  
+    public IActionResult Logout()
     {
         HttpContext.Session.Clear();
-        return Ok(new { message = "Logged Out" });
+        return RedirectToAction("Index", "Home");
     }
+
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace InventoryManagementSystem.Models
 {
@@ -19,10 +21,14 @@ namespace InventoryManagementSystem.Models
         public string Address { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public bool Active { get; set; } = true; 
 
         public int CreatedBy { get; set; }
-        public User User { get; set; }
 
-        public ICollection<Order> Orders { get; set; }
+        [ForeignKey(nameof(CreatedBy))]
+        [BindNever]
+        public User? User { get; set; }
+
+      
     }
 }
