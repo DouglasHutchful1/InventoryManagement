@@ -1,0 +1,72 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Reports";
+}
+
+<div class="card shadow-sm mx-auto my-4" style="max-width:700px;">
+    <div class="card-header bg-primary text-white fw-bold fs-5 d-flex align-items-center">
+        <i class="bi bi-file-earmark-text me-2"></i> Generate Report
+    </div>
+    <div class="card-body">
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                @TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <form asp-action="Generate" method="post" class="row g-3 needs-validation" novalidate>
+            
+            <div class="col-md-6">
+                <label class="form-label">Report Type</label>
+                <select name="reportType" class="form-select" required>
+                    <option value="">-- Select Report --</option>
+                    <option value="OrderSummary">Order Summary</option>
+                    <option value="InventoryStock">Inventory Stock</option>
+                    <option value="SalesRegister">Sales Register</option>
+                </select>
+                <div class="invalid-feedback">
+                    Please select a report type.
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">From Date</label>
+                <input type="date" name="fromDate" class="form-control" />
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">To Date</label>
+                <input type="date" name="toDate" class="form-control" />
+            </div>
+
+            <div class="col-12 d-flex justify-content-end mt-3">
+                <button type="submit" class="btn btn-success rounded-pill">
+                    <i class="bi bi-file-earmark-pdf me-1"></i> Generate PDF
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (() => {
+            'use strict';
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+}
