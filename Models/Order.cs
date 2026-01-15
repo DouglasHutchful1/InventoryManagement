@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace InventoryManagementSystem.Models
 {
@@ -7,7 +9,6 @@ namespace InventoryManagementSystem.Models
         public int Id { get; set; }
 
         public int CustomerId { get; set; }
-        public Customer Customer { get; set; }
 
         public DateTime OrderDate { get; set; } = DateTime.Now;
 
@@ -17,8 +18,10 @@ namespace InventoryManagementSystem.Models
         public decimal? TotalAmount { get; set; }
 
         public int CreatedBy { get; set; }
-        public User User { get; set; }
+        [ForeignKey(nameof(CreatedBy))]
+        [BindNever]
+        public User? User { get; set; }
 
-        public ICollection<OrderItem> OrderItems { get; set; }
+        public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
 }
