@@ -19,7 +19,7 @@
 
         .sidebar {
             min-height: 100vh;
-            background: linear-gradient(180deg, #2563eb, #1d4ed8);
+            background: linear-gradient(180deg, #1a1a1a, #1d4ed8);
             color: #fff;
             position: fixed;
             width: 220px;
@@ -36,6 +36,7 @@
             color: #fff;
             text-align: center;
             margin-bottom: 2rem;
+            margin-top: 2rem;
         }
 
         .sidebar a.nav-link {
@@ -64,6 +65,21 @@
             background-color: #1d4ed8;
             color: #fff;
         }
+        .sidebar.collapsed .link-text {
+            display: none;
+        }
+
+        .sidebar .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    }
+    .sidebar.collapsed .btn {
+        width: 50px; 
+    }
+
+
+
 
         /* Content */
         .content {
@@ -105,40 +121,39 @@
 
 <!-- Sidebar -->
 <div class="sidebar d-flex flex-column" id="sidebar">
+    <br/>
     <a class="navbar-brand" asp-controller="Dashboard" asp-action="Index">
-        IMS
+        DAIM System
     </a>
     <nav class="nav flex-column">
         <a class="nav-link active" href="/Dashboard" data-bs-toggle="tooltip" title="Dashboard">
             <i class="bi bi-speedometer2"></i> <span class="link-text">Dashboard</span>
         </a>
-        <a class="nav-link" href="/Lead" data-bs-toggle="tooltip" title="Sync Leads">
-            <i class="bi bi-cash-stack"></i> <span class="link-text">Sync Leads</span>
-        </a>
+
         <a class="nav-link" href="/Inventory" data-bs-toggle="tooltip" title="Inventory">
             <i class="bi bi-box-seam"></i> <span class="link-text">Inventory</span>
         </a>
-        <a class="nav-link" href="/Orders" data-bs-toggle="tooltip" title="Orders">
+        <a class="nav-link" href="/Order" data-bs-toggle="tooltip" title="Orders">
             <i class="bi bi-bag-check"></i> <span class="link-text">Orders</span>
         </a>
-        <a class="nav-link" href="/Suppliers" data-bs-toggle="tooltip" title="Suppliers">
+        <a class="nav-link" href="/Supplier" data-bs-toggle="tooltip" title="Suppliers">
             <i class="bi bi-truck"></i> <span class="link-text">Suppliers</span>
         </a>
         <a class="nav-link" href="/Customers" data-bs-toggle="tooltip" title="Customers">
             <i class="bi bi-people-fill"></i> <span class="link-text">Customers</span>
         </a>
-        <a class="nav-link" href="/Reports" data-bs-toggle="tooltip" title="Reports">
+        <a class="nav-link" href="/Report" data-bs-toggle="tooltip" title="Reports">
             <i class="bi bi-graph-up"></i> <span class="link-text">Reports</span>
         </a>
-        <a class="nav-link" href="/Users" data-bs-toggle="tooltip" title="Settings">
-            <i class="bi bi-gear"></i> <span class="link-text">Settings</span>
-        </a>
+       
     </nav>
 
     <div class="mt-auto p-3">
-        <a href="@Url.Action("Logout","Home")" class="btn btn-outline-light w-100">
-            <i class="bi bi-box-arrow-right me-2"></i> Logout
+        <a href="@Url.Action("Logout", "Home")" class="btn btn-outline-light w-100 d-flex align-items-center justify-content-center">
+            <i class="bi bi-box-arrow-right"></i>
+            <span class="link-text ms-2">Logout</span>
         </a>
+
         <div class="mt-2 text-center">
             <i id="sidebarToggle" class="bi bi-list"></i>
         </div>
