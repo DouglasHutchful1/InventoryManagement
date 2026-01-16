@@ -24,11 +24,13 @@ namespace InventoryManagementSystem.Models
         [Column(TypeName = "decimal(18,2)")]
         public decimal? Price { get; set; }
 
+        [BindNever]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-
+        [BindNever]
         public DateTime? UpdatedAt { get; set; }
 
         // Foreign key
+        [BindNever]
         public int CreatedBy { get; set; }
        
         [ForeignKey("CreatedBy")]  

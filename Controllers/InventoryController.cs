@@ -68,22 +68,34 @@ namespace InventoryManagementSystem.Controllers
             return View(item);
         }
 
-        // POST: /Inventory/Edit/5
+        // POST: /Inventory/Edit/
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Inventory item)
         {
             if (id != item.Id) return BadRequest();
 
-            if (ModelState.IsValid)
-            {
-                item.UpdatedAt = DateTime.Now;
-                _db.Inventories.Update(item);
-                await _db.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(item);
+            ModelState.Remove(nameof(Inventory.Creator));
+            ModelState.Remove(nameof(Inventory.OrderItems));
+
+            if (!ModelState.IsValid)
+                return View(item);
+
+            var existing = await _db.Inventories.FirstOrDefaultAsync(i => i.Id == id);
+            if (existing == null) return NotFound();
+
+            existing.Name = item.Name;
+            existing.SKU = item.SKU;
+            existing.Category = item.Category;
+            existing.Quantity = item.Quantity;
+            existing.ReorderLevel = item.ReorderLevel;
+            existing.Price = item.Price;
+            existing.UpdatedAt = DateTime.Now;
+
+            await _db.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
+
 
         // POST: /Inventory/Delete/5
         [HttpPost]
