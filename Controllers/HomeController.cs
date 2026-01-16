@@ -15,7 +15,12 @@ public class HomeController(ILogger<HomeController> logger,InventoryDbContext db
     public IActionResult Index()
     {
         return View();
+    }  
+    public IActionResult Register()
+    {
+        return View();
     }
+    
 
     //login  method
     [HttpPost]

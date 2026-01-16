@@ -1,6 +1,6 @@
-﻿@{
+@{
     Layout = null;
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Register";
 }
 
 <!DOCTYPE html>
@@ -49,7 +49,7 @@
         .auth-card h1 {
             font-weight: 800;
             color: #fff;
-            margin-bottom: 18px;
+            margin-bottom: 22px;
             font-size: 2rem;
         }
 
@@ -57,15 +57,6 @@
             color: rgba(255,255,255,0.75);
             font-size: 0.95rem;
             margin-bottom: 16px;
-        }
-
-        .field-label {
-            color: rgba(255,255,255,0.80);
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-align: left;
-            display: block;
-            margin: 10px 0 6px;
         }
 
         .input-group-text {
@@ -77,7 +68,7 @@
             padding: 0.7rem 0.9rem;
         }
 
-        .form-control {
+        .form-control, .form-select {
             background: rgba(255,255,255,0.20);
             border: 1px solid rgba(255,255,255,0.35);
             border-left: 0;
@@ -90,11 +81,20 @@
             color: rgba(255,255,255,0.75);
         }
 
-        .form-control:focus {
+        .form-control:focus, .form-select:focus {
             outline: none;
             background: rgba(255,255,255,0.32);
             box-shadow: 0 0 0 0.2rem rgba(255,255,255,0.20);
             color: #fff;
+        }
+
+        .field-label {
+            color: rgba(255,255,255,0.80);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-align: left;
+            display: block;
+            margin: 10px 0 6px;
         }
 
         .btn-modern {
@@ -147,33 +147,57 @@
 <section class="w-100 px-3">
     <div class="auth-card mx-auto">
         <h4>DAIM System</h4>
-        <h1>Log In</h1>
-        <div class="muted-help">Sign in with your username</div>
+        <h1>Create Account</h1>
+        <div class="muted-help">Fill in your details to register.</div>
 
         <div id="Label_Message"></div>
 
-        <form id="loginForm" autocomplete="off">
-            <label class="field-label">Username</label>
+        <form id="RegisterForm" autocomplete="off">
+            <label class="field-label">First Name</label>
             <div class="input-group mb-2">
                 <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-                <input type="text" id="Input_Username" class="form-control" placeholder="Username " required />
+                <input type="text" id="regFirstname" class="form-control" placeholder="e.g. Douglas" required />
+            </div>
+
+            <label class="field-label">Surname</label>
+            <div class="input-group mb-2">
+                <span class="input-group-text"><i class="bi bi-person-badge-fill"></i></span>
+                <input type="text" id="regSurname" class="form-control" placeholder="e.g. Mensah" required />
+            </div>
+
+            <label class="field-label">Username</label>
+            <div class="input-group mb-2">
+                <span class="input-group-text"><i class="bi bi-at"></i></span>
+                <input type="text" id="regUsername" class="form-control" placeholder="Enter your username" required />
+            </div>
+
+            <label class="field-label">Email</label>
+            <div class="input-group mb-2">
+                <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+                <input type="email" id="regEmail" class="form-control" placeholder="name@email.com" required />
             </div>
 
             <label class="field-label">Password</label>
-            <div class="input-group mb-3">
+            <div class="input-group mb-2">
                 <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                <input type="password" id="Input_Password" class="form-control" placeholder="Password" required />
+                <input type="password" id="regPassword" class="form-control" placeholder="Create a password" required />
             </div>
 
-            <button type="button" id="Button_Login" class="btn btn-modern">
-                <span class="spinner-border spinner-border-sm d-none me-2" id="loginSpinner" role="status" aria-hidden="true"></span>
-                Login
+            <label class="field-label">Confirm Password</label>
+            <div class="input-group mb-3">
+                <span class="input-group-text"><i class="bi bi-shield-lock-fill"></i></span>
+                <input type="password" id="regConfirmPassword" class="form-control" placeholder="Repeat password" required />
+            </div>
+
+            <button type="button" id="Button_Register" class="btn btn-modern">
+                <span class="spinner-border spinner-border-sm d-none me-2" id="registerSpinner" role="status" aria-hidden="true"></span>
+                Register
             </button>
         </form>
 
         <div class="mt-3">
-            <span class="text-white-50">Don't have an account?</span>
-            <a class="btn-link-light ms-1" href="/Home/Register">Create one</a>
+            <span class="text-white-50">Already have an account?</span>
+            <a class="btn-link-light ms-1" href="@Url.Action("Index","Home")">Login</a>
         </div>
     </div>
 </section>
@@ -203,43 +227,71 @@
         }
 
         function setBusy(isBusy) {
-            $("#Button_Login").prop("disabled", isBusy);
-            $("#loginSpinner").toggleClass("d-none", !isBusy);
+            $("#Button_Register").prop("disabled", isBusy);
+            $("#registerSpinner").toggleClass("d-none", !isBusy);
         }
 
-        function performLogin() {
-            const username = $("#Input_Username").val().trim();
-            const password = $("#Input_Password").val().trim();
-
+        function performRegister() {
             $("#Label_Message").html("");
 
-            if (!username || !password) {
-                $("#Label_Message").html('<strong>Please enter both username/email and password.</strong>');
+            const firstname = $("#regFirstname").val().trim();
+            const surname = $("#regSurname").val().trim();
+            const username = $("#regUsername").val().trim();
+            const email = $("#regEmail").val().trim();
+            const pwd = $("#regPassword").val();
+            const confirm = $("#regConfirmPassword").val();
+
+            if (!firstname || !surname || !username || !email || !pwd || !confirm) {
+                $("#Label_Message").html('<strong>Please fill in all fields.</strong>');
                 return;
             }
+
+            if (pwd.length < 6) {
+                $("#Label_Message").html('<strong>Password must be at least 6 characters.</strong>');
+                return;
+            }
+
+            if (pwd !== confirm) {
+                $("#Label_Message").html('<strong>Passwords do not match.</strong>');
+                showToast("Passwords do not match.", "danger");
+                return;
+            }
+
+            const data = {
+                Firstname: firstname,
+                Surname: surname,
+                Username: username,
+                Email: email,
+                Password: pwd,
+                ConfirmPassword: confirm
+            };
 
             setBusy(true);
 
             $.ajax({
                 type: "POST",
-                url: "/Home/Login",
+                url: "/Home/Register",
+                contentType: "application/json",
                 dataType: "json",
-                data: { username: username, password: password }
+                data: JSON.stringify(data)
             })
-            .done(function (response) {
-                if (response && response.success) {
-                    showToast(response.message || "Login successful.", "success");
+            .done(function (res) {
+                // Your controller returns: { success = true, message = "...", id = ... }
+                if (res && res.success) {
+                    showToast(res.message || "Registration successful. You can now log in.", "success");
                     setTimeout(function () {
-                        window.location.href = response.redirect || "/";
+                        window.location.href = "@Url.Action("Index","Home")";
                     }, 900);
                 } else {
-                    const msg = response?.message || "Login failed.";
+                    const msg = (res && (res.message || res.Message)) || "Registration failed.";
                     $("#Label_Message").html(`<strong>${msg}</strong>`);
                     showToast(msg, "danger");
                 }
             })
             .fail(function (xhr) {
-                const msg = xhr.responseJSON?.message || "Login failed. Please try again.";
+                const msg = xhr.responseJSON?.message
+                    || xhr.responseJSON?.Message
+                    || "Registration failed. Please try again.";
                 $("#Label_Message").html(`<strong>${msg}</strong>`);
                 showToast(msg, "danger");
             })
@@ -248,9 +300,9 @@
             });
         }
 
-        $("#Button_Login").on("click", performLogin);
+        $("#Button_Register").on("click", performRegister);
         $(document).on("keypress", function (e) {
-            if (e.which === 13) performLogin();
+            if (e.which === 13) performRegister();
         });
     });
 </script>
