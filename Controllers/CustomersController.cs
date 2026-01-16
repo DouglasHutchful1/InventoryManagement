@@ -93,9 +93,15 @@ namespace InventoryManagementSystem.Controllers
                 if (!ModelState.IsValid)
                     return View(customer);
 
-                _db.Update(customer);
-                await _db.SaveChangesAsync();
+                var existing = await _db.Customers.FirstOrDefaultAsync(c => c.Id == customer.Id);
+                if (existing == null) return NotFound();
 
+                existing.Name = customer.Name;
+                existing.Email = customer.Email;
+                existing.Phone = customer.Phone;
+                existing.Address = customer.Address;
+                
+                await _db.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -105,6 +111,7 @@ namespace InventoryManagementSystem.Controllers
                 return View(customer);
             }
         }
+
 
         // DELETE: POST /Customers/Delete/{id}
         [HttpPost]
