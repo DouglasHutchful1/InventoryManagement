@@ -25,6 +25,7 @@ namespace InventoryManagementSystem.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public bool Active { get; set; } = true; 
+        [BindNever]
         public int CreatedBy { get; set; }
         
         [ForeignKey(nameof(CreatedBy))]

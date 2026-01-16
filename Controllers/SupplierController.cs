@@ -86,7 +86,7 @@ namespace InventoryManagementSystem.Controllers
             }
         }
 
-        // EDIT 
+        // EDIT (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Supplier supplier)
@@ -96,9 +96,17 @@ namespace InventoryManagementSystem.Controllers
                 if (!ModelState.IsValid)
                     return View(supplier);
 
-                _db.Update(supplier);
-                await _db.SaveChangesAsync();
+                var existing = await _db.Suppliers.FirstOrDefaultAsync(s => s.Id == supplier.Id);
+                if (existing == null) return NotFound();
 
+                existing.Name = supplier.Name;
+                existing.ContactPerson = supplier.ContactPerson;
+                existing.Email = supplier.Email;
+                existing.Phone = supplier.Phone;
+                existing.Address = supplier.Address;
+
+
+                await _db.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
