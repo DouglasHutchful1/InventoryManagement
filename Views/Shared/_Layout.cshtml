@@ -10,121 +10,184 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            min-height: 100vh;
-            background: #f5f7fa;
-        }
-
-        .sidebar {
-            min-height: 100vh;
-            background: linear-gradient(180deg, #1a1a1a, #1d4ed8);
-            color: #fff;
-            position: fixed;
-            width: 220px;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar.collapsed {
-            width: 70px;
-        }
-
-        .sidebar .navbar-brand {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #fff;
-            text-align: center;
-            margin-bottom: 2rem;
-            margin-top: 2rem;
-        }
-
-        .sidebar a.nav-link {
-            color: #ffffffaa;
-            font-weight: 500;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            border-radius: 12px;
-            margin: 4px 10px;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-
-        .sidebar a.nav-link i {
-            font-size: 1.2rem;
-            margin-right: 12px;
-        }
-
-        .sidebar a.nav-link:hover, .sidebar a.nav-link.active {
-            background: rgba(255,255,255,0.15);
-            color: #fff;
-        }
-
-        .sidebar .tooltip-inner {
-            background-color: #1d4ed8;
-            color: #fff;
-        }
-        .sidebar.collapsed .link-text {
-            display: none;
-        }
-
-        .sidebar .btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        min-height: 100vh;
+        background: #f5f7fa;
     }
+
+    /* Sidebar */
+    .sidebar {
+        min-height: 100vh;
+        background: linear-gradient(180deg, #1a1a1a, #1d4ed8);
+        color: #fff;
+        position: fixed;
+        width: 220px;
+        transition: all 0.3s ease;
+        padding-top: 14px;
+    }
+
+    .sidebar.collapsed {
+        width: 70px;
+    }
+
+    /* REMOVE old brand styling usage (do not use .navbar-brand inside sidebar anymore) */
+    .sidebar .navbar-brand {
+        display: none;
+    }
+
+    /* New Brand */
+    .sidebar-brand {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 12px;
+
+        margin: 10px 12px 18px;
+        padding: 12px 14px;
+
+        color: #fff;
+        text-decoration: none;
+
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.10);
+
+        overflow: hidden;
+        white-space: nowrap;
+        transition: all 0.25s ease;
+    }
+
+    .sidebar-brand:hover {
+        background: rgba(255, 255, 255, 0.16);
+        color: #fff;
+    }
+
+    .brand-icon {
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.14);
+        flex: 0 0 auto;
+    }
+
+    .brand-icon i {
+        font-size: 1.2rem;
+    }
+
+    .brand-text {
+        font-size: 1.1rem;
+        font-weight: 800;
+        letter-spacing: -1px;
+        line-height: 1;
+    }
+
+    /* Nav links */
+    .sidebar a.nav-link {
+        color: #ffffffaa;
+        font-weight: 500;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        border-radius: 12px;
+        margin: 4px 10px;
+        transition: all 0.2s;
+        white-space: nowrap;
+    }
+
+    .sidebar a.nav-link i {
+        font-size: 1.2rem;
+        margin-right: 12px;
+    }
+
+    .sidebar a.nav-link:hover,
+    .sidebar a.nav-link.active {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+    }
+
+    .sidebar .tooltip-inner {
+        background-color: #1d4ed8;
+        color: #fff;
+    }
+
+    /* Collapsed behavior */
+    .sidebar.collapsed .link-text {
+        display: none;
+    }
+
+    .sidebar.collapsed .brand-text {
+        display: none;
+    }
+
+    .sidebar.collapsed .sidebar-brand {
+        justify-content: center;
+        padding: 12px 10px;
+        margin: 10px 12px 18px;
+    }
+
+    /* Buttons in sidebar */
+    .sidebar .btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
     .sidebar.collapsed .btn {
-        width: 50px; 
+        width: 50px;
     }
 
+    /* Content */
+    .content {
+        margin-left: 220px;
+        padding: 2rem;
+        transition: margin-left 0.3s;
+    }
 
+    .content.collapsed {
+        margin-left: 70px;
+    }
 
+    .navbar-custom {
+        background: #ffffff;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        border-radius: 0.5rem;
+    }
 
-        /* Content */
-        .content {
-            margin-left: 220px;
-            padding: 2rem;
-            transition: margin-left 0.3s;
-        }
+    .card-dashboard {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        padding: 1.5rem;
+        transition: all 0.25s;
+    }
 
-        .content.collapsed {
-            margin-left: 70px;
-        }
+    .card-dashboard:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+    }
 
-        .navbar-custom {
-            background: #ffffff;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border-radius: 0.5rem;
-        }
+    #sidebarToggle {
+        cursor: pointer;
+        font-size: 1.5rem;
+    }
+</style>
 
-        .card-dashboard {
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-            padding: 1.5rem;
-            transition: all 0.25s;
-        }
-
-        .card-dashboard:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.12);
-        }
-
-        #sidebarToggle {
-            cursor: pointer;
-            font-size: 1.5rem;
-        }
-    </style>
 </head>
 <body>
 
 <!-- Sidebar -->
 <div class="sidebar d-flex flex-column" id="sidebar">
-    <br/>
-    <a class="navbar-brand" asp-controller="Dashboard" asp-action="Index">
-        DAIM System
-    </a>
+ <a class="sidebar-brand" asp-controller="Dashboard" asp-action="Index">
+     <span class="brand-icon"><i class="bi bi-grid-1x2-fill"></i></span>
+     <span class="brand-text">DAIM System</span>
+ </a>
+
+
     <nav class="nav flex-column">
         <a class="nav-link active" href="/Dashboard" data-bs-toggle="tooltip" title="Dashboard">
             <i class="bi bi-speedometer2"></i> <span class="link-text">Dashboard</span>
